@@ -1,0 +1,9 @@
+{
+  "id_pattern": "^(?P<id>REQ-DEMO-\\d{3})(?:\\s+(?P<title>\\S.*))?$",
+  "heading_pattern": "^(?P<number>\\d+\\.\\d+)\\s+(?P<title>[A-Z]\\S.*)$",
+  "label_pattern": "^(?P<label>[A-Z][a-zA-Z ]*):\\s*(?P<value>.*)$",
+  "body_label": "Description",
+  "figure_pattern": "^Figure\\s+\\d+:\\s*(?P<caption>.+)$",
+  "header_margin_frac": 0.1,
+  "footer_margin_frac": 0.1
+}

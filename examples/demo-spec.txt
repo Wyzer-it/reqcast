@@ -1,0 +1,23 @@
+3.1 Power Management
+
+REQ-DEMO-001 Low-power standby
+Description: The thermostat shall enter standby mode after 120 seconds of no user
+interaction and no active heating or cooling demand.
+Rationale: Reduces average daily power draw for battery-backed installations.
+Priority: High
+
+REQ-DEMO-002 Battery backup runtime
+Description: On mains power loss, the thermostat shall maintain display and sensor
+operation for at least 4 hours from the internal battery.
+Rationale: Prevents loss of schedule and setpoint state during short outages.
+Priority: Medium
+
+Figure 1: System Overview
+
+3.2 User Interface
+
+REQ-DEMO-003 Setpoint adjustment
+Description: The user shall be able to adjust the target temperature in 0.5 degree
+increments using the front-panel dial.
+Rationale: Matches the granularity users expect from comparable thermostats.
+Priority: High

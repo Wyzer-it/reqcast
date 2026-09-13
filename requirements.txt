@@ -1,0 +1,17 @@
+pymupdf==1.28.2
+
+# Optional - only needed for .docx input
+# python-docx>=1.1
+
+# Optional - only needed to convert a non-PNG image (e.g. JPEG) embedded in
+# Markdown or .docx input to PNG; PNG images need neither this nor python-docx's own deps
+# Pillow>=10
+
+# Optional - only needed for `--polish`
+# anthropic>=0.69
+
+# Dev/test only - needed to run tests/, not to use reqcast itself
+# pytest>=8
+# python-docx>=1.1
+# reportlab>=4
+# Pillow>=10

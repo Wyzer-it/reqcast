@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1350px; }
+  body {
+    background:
+      radial-gradient(700px 560px at 90% -10%, rgba(0,194,209,0.17), transparent 62%),
+      radial-gradient(600px 480px at -10% 108%, rgba(0,194,209,0.10), transparent 62%),
+      #0A2342;
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #dbd6d6;
+    padding: 64px 64px 56px;
+    display: flex; flex-direction: column; gap: 34px;
+  }
+  .kicker {
+    font-size: 20px; letter-spacing: .22em; text-transform: uppercase;
+    color: #00C2D1; font-weight: 700;
+  }
+  .name {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 92px; color: #FFFFFF; font-weight: 600; letter-spacing: -.02em;
+    line-height: 1; margin-top: 6px;
+  }
+  .tag { font-size: 30px; line-height: 1.45; color: #cfe0ef; margin-top: 22px; max-width: 880px; }
+  .flow {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 24px; line-height: 1.6; color: #ffffff; margin-top: 30px;
+    padding: 22px 26px 26px; border: 1px solid rgba(0,194,209,.22);
+    background: rgba(0,194,209,.09); border-radius: 14px;
+  }
+  .doc-row { position: relative; display: flex; justify-content: space-between; align-items: flex-start; }
+  .doc-group { display: flex; align-items: flex-start; gap: 20px; }
+  .doc-icon { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .doc-icon svg { display: block; }
+  .doc-icon span {
+    font-size: 15px; letter-spacing: .04em; color: #7E9AB8;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .doc-arrow {
+    position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+  }
+  .doc-arrow span {
+    font-size: 15px; letter-spacing: .02em; color: #00C2D1; font-weight: 700;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .facts { display: flex; flex-wrap: wrap; gap: 14px; }
+  .pill {
+    font-size: 21px; color: #9fb3c8; border: 1px solid rgba(0,194,209,.3);
+    border-radius: 999px; padding: 10px 20px; background: rgba(0,194,209,.07);
+  }
+  .term {
+    flex: 1; background: #071a33; border: 1px solid rgba(0,194,209,.22);
+    border-radius: 18px; box-shadow: 0 28px 70px rgba(0,0,0,.45);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .bar {
+    flex: none; display: flex; align-items: center; gap: 10px;
+    padding: 16px 22px; background: rgba(255,255,255,.045);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+  .dot { width: 14px; height: 14px; border-radius: 50%; }
+  .bar span.t {
+    margin-left: 14px; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 19px; color: #7E9AB8;
+  }
+  pre {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 22px; line-height: 1.62; padding: 30px 30px; white-space: pre; color: #cfe0ef;
+  }
+  .grn { color:#4CAF50; font-weight:600; } .vio { color:#C792EA; } .mut { color:#6f8aa6; }
+  .wh { color:#fff; } .cy { color:#00C2D1; font-weight:600; } .key { color:#7E9AB8; }
+  .num { color:#FFB74D; font-weight:600; } .str { color:#9CE58B; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="kicker">Requirements extraction</div>
+    <div class="name">reqcast</div>
+    <div class="tag">Converts a requirements spec into ReqIF 1.2, generic and pattern-driven.</div>
+    <div class="flow">
+      <div class="doc-row">
+        <div class="doc-group">
+          <div class="doc-icon" style="color:#EC1C24">
+            <svg width="38" height="46" viewBox="0 0 30 36"><path d="M3 2h15l9 9v23a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 2v9h9" fill="none" stroke="currentColor" stroke-width="2"/><text x="15" y="26" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" font-weight="700" fill="currentColor">PDF</text></svg>
+            <span>.pdf</span>
+          </div>
+          <div class="doc-icon" style="color:#2B579A">
+            <svg width="38" height="46" viewBox="0 0 30 36"><path d="M3 2h15l9 9v23a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 2v9h9" fill="none" stroke="currentColor" stroke-width="2"/><text x="15" y="26" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" font-weight="700" fill="currentColor">DOC</text></svg>
+            <span>.docx</span>
+          </div>
+          <div class="doc-icon" style="color:#FFB74D">
+            <svg width="38" height="46" viewBox="0 0 30 36"><path d="M3 2h15l9 9v23a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 2v9h9" fill="none" stroke="currentColor" stroke-width="2"/><text x="15" y="26" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" font-weight="700" fill="currentColor">MD</text></svg>
+            <span>.md</span>
+          </div>
+          <div class="doc-icon" style="color:#9fb3c8">
+            <svg width="38" height="46" viewBox="0 0 30 36"><path d="M3 2h15l9 9v23a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 2v9h9" fill="none" stroke="currentColor" stroke-width="2"/><text x="15" y="26" text-anchor="middle" font-family="ui-monospace,monospace" font-size="8.5" font-weight="700" fill="currentColor">TXT</text></svg>
+            <span>.txt</span>
+          </div>
+        </div>
+        <div class="doc-icon doc-arrow" style="color:#00C2D1">
+          <svg width="66" height="46" viewBox="0 0 56 36"><path d="M4 4 L18 18 L4 32" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="square" stroke-linejoin="miter"/><path d="M24 4 L38 18 L24 32" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          <span>$ reqcast</span>
+        </div>
+        <div class="doc-group">
+          <div class="doc-icon" style="color:#ffffff">
+            <svg width="38" height="46" viewBox="0 0 30 36"><path d="M3 2h15l9 9v23a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 2v9h9" fill="none" stroke="currentColor" stroke-width="2"/><text x="15" y="26" text-anchor="middle" font-family="ui-monospace,monospace" font-size="6.5" font-weight="700" fill="currentColor">ReqIF</text></svg>
+            <span>.reqif</span>
+          </div>
+          <div class="doc-icon" style="color:#00C2D1">
+            <svg width="38" height="46" viewBox="0 0 30 36"><path d="M3 2h15l9 9v23a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M18 2v9h9" fill="none" stroke="currentColor" stroke-width="2"/><rect x="12" y="2" width="5" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><line x1="14.5" y1="8" x2="14.5" y2="32" stroke="currentColor" stroke-width="1.3" stroke-dasharray="2.2,2.2"/><text x="15" y="30" text-anchor="middle" font-family="ui-monospace,monospace" font-size="7.5" font-weight="700" fill="currentColor">ZIP</text></svg>
+            <span>.reqifz</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="term">
+    <div class="bar">
+      <div class="dot" style="background:#FF5F57"></div>
+      <div class="dot" style="background:#FEBC2E"></div>
+      <div class="dot" style="background:#28C840"></div>
+      <span class="t">reqcast</span>
+    </div>
+<pre><span class="grn">spec@wyzer</span><span class="mut">:</span><span class="vio">~</span><span class="mut">$</span> <span class="wh">python3 -m reqcast.cli \</span>
+    <span class="wh">demo-spec.pdf demo.reqifz</span> <span class="cy">\</span>
+    <span class="cy">--config demo-config.json</span>
+
+<span class="mut">{</span>
+  <span class="key">"logical_pages"</span><span class="mut">:</span> <span class="num">3</span><span class="mut">,</span>
+  <span class="key">"requirements"</span><span class="mut">:</span> <span class="num">14</span><span class="mut">,</span>
+  <span class="key">"headings"</span><span class="mut">:</span> <span class="num">5</span><span class="mut">,</span>
+  <span class="key">"figures_cropped"</span><span class="mut">:</span> <span class="num">1</span><span class="mut">,</span>
+  <span class="key">"boilerplate_lines_dropped"</span><span class="mut">:</span> <span class="num">7</span><span class="mut">,</span>
+  <span class="key">"output"</span><span class="mut">:</span> <span class="str">"demo.reqifz"</span>
+<span class="mut">}</span></pre>
+  </div>
+
+  <div class="facts">
+    <div class="pill">MIT</div>
+    <div class="pill">Python 3.12+</div>
+    <div class="pill">ReqIF 1.2</div>
+    <div class="pill">config-driven</div>
+  </div>
+</body>
+</html>
