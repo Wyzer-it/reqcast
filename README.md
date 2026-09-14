@@ -33,12 +33,12 @@ way to do it consistently and to redo it when the source is revised.
 
 ## Install
 
-Python 3.12 (this repo bans 3.14 everywhere, tuning-dataset tooling
-included - see the repo root `.claude/claude.md`):
+Requires Python 3.12 (3.14 isn't supported yet). Works on macOS, Linux,
+and Windows:
 
 ```bash
 uv venv --python 3.12 .venv
-uv pip install --python .venv/bin/python pymupdf
+uv pip install --python .venv/bin/python pymupdf   # .venv\Scripts\python.exe on Windows
 
 # Optional, only if you're converting .docx input:
 uv pip install --python .venv/bin/python python-docx
