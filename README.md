@@ -222,16 +222,16 @@ It reads the system prompt in `reqcast/polish.py` - check it before relying
 on this for a document where fabrication would matter, since a system
 prompt is a request, not a guarantee. Runs at **`--polish-temperature 0`
 by default**: this pass only reflows and repairs existing text, never
-invents it, and a non-zero temperature is exactly what would let the model
-fill gaps or vary wording it has no business touching. Raise it only if
-you have a specific reason to. As a backstop regardless of temperature, any
+invents it, and a non-zero temperature would let the model fill gaps or
+vary wording it has no business touching. Raise it only if you have a
+specific reason to. As a backstop regardless of temperature, any
 response whose length falls outside 75%-130% of the original is rejected
 and the untouched original is kept instead - a cheap guard against the
 model summarizing or padding rather than reflowing. The printed summary's
 `polish` block reports `attempted` / `changed` / `unchanged` /
 `rejected_length` / `flagged_injection` / `rejected_injection` / `failed`
-(with per-item detail in `errors` and `flagged`) so you can see exactly
-what happened; nothing here retries a failed item automatically.
+(with per-item detail in `errors` and `flagged`); nothing here retries a
+failed item automatically.
 
 **A requirement's body text is untrusted input.** It comes from the
 source document, not from whoever runs reqcast, so it's screened for
@@ -248,17 +248,18 @@ is. This is a phrase-match heuristic, not a guarantee - it catches
 common, unsophisticated attempts and documents that the risk was
 considered, not that it's eliminated.
 
-reqcast is generic, and a spec that *defines* an AI/LLM system's own
+reqcast is generic, and a spec that defines an AI/LLM system's own
 behavior legitimately uses almost the same vocabulary a real injection
 attempt does ("the assistant shall not reveal its system prompt", a
 prompt-template example that quotes literal `<system>`/`<user>` tags).
-Where that's cheap to tell apart, it is: a real injection payload is a
+One distinction is cheap to check for: a real injection payload is a
 bare imperative ("Ignore previous instructions"), while a requirements
-sentence making the same point is a third-person modal ("The system
-**shall** ignore..."), so a match immediately preceded by
-shall/must/will/should/can/could/may/to doesn't count. Where it can't be
-told apart this cheaply (a document whose own subject is prompt
-injection, or one that quotes `<system>` tags as literal syntax), use
+sentence making the same point uses a third-person modal ("The system
+shall ignore..."), so a match immediately preceded by
+shall/must/will/should/can/could/may/to doesn't count. Where the two
+can't be told apart this cheaply - a document whose own subject is
+prompt injection, or one that quotes `<system>` tags as literal syntax -
+use
 **`--polish-injection-check off`** (or `polish_injection_check: "off"` in
 config.json) rather than fighting the heuristic - it's an explicit
 statement that you already trust this specific document, not a global
@@ -266,7 +267,7 @@ setting.
 
 **Requests are batched, not one API call per requirement.** Every
 requirement with body text is packed into TOON-encoded batches (see
-[Batching: TOON, not JSON](#batching-toon-not-json)) up to
+[Why TOON for this, and not for ReqIF itself](#why-toon-for-this-and-not-for-reqif-itself)) up to
 `--polish-batch-tokens` (or `polish_batch_tokens` in config.json if set;
 the CLI flag wins if both are given) - default
 `reqcast.polish.DEFAULT_POLISH_BATCH_TOKENS`. A base64-looking blob or a
@@ -292,22 +293,21 @@ any credential source the SDK resolves automatically - see the [Claude API
 docs](https://docs.claude.com)). Run it once you're otherwise happy with
 the extraction, not on every tuning iteration.
 
-### Batching: TOON, not JSON
+### Why TOON for this, and not for ReqIF itself
 
-Each batch is a flat, uniform array of `{id, body}` records - exactly the
-shape [our own data-format research](https://wyzer.it/blog/Data-Format-Selection-for-Multi-Agent-LLM-Systems-An-Empirical-Analysis-of-Token-Efficiency)
-found TOON (Token-Oriented Object Notation) genuinely wins on: roughly
-52-54% fewer tokens than the equivalent JSON on simple/moderately-nested
-data, with *better* comprehension accuracy on the same benchmark (73.9%
-vs. JSON's 69.7% on nested relational queries). That article also found
-TOON fails outright on deeply nested data - which is exactly why reqcast's
-actual output stays plain ReqIF/XML (a real object graph: specification ->
-hierarchy -> spec-object -> attribute values) rather than being forced
-through TOON too. `reqcast/toon.py` is a small, hand-written encoder/decoder
-for just the flat-array shape `--polish` needs, not a general TOON
-implementation - the real spec is followed exactly for quoting/escaping
-(comma, quote, backslash, and newline all round-trip), narrowed to what
-this one call actually sends.
+Each batch is a flat, uniform array of `{id, body}` records. That shape
+is the specific case TOON (Token-Oriented Object Notation) was built
+for: a [Wyzer benchmark comparing data formats for multi-agent LLM
+systems](https://wyzer.it/blog/Data-Format-Selection-for-Multi-Agent-LLM-Systems-An-Empirical-Analysis-of-Token-Efficiency)
+measured roughly 52-54% fewer tokens than the equivalent JSON on
+simple/moderately-nested data, with comprehension accuracy on the same
+benchmark's nested relational queries at 73.9% against JSON's 69.7%.
+The same benchmark found TOON fails on deeply nested data, which is why
+reqcast's real output stays plain ReqIF/XML - a specification is a deep
+object graph (specification, hierarchy, spec-object, attribute values),
+not a flat table. `reqcast/toon.py` implements only the flat-array shape
+`--polish` sends, not the general format; its quoting and escaping
+(comma, quote, backslash, newline all round-trip) follow the real spec.
 
 ## What still needs a human (the manual review pass)
 
@@ -334,26 +334,23 @@ those defects are the point.
 
 ## Why this exists
 
-`reqcast` gets a specification's requirements *out* of a legacy format
-(PDF, Word, ad-hoc Markdown or text) and *into* ReqIF, with each
-requirement's own identifier and structure preserved. It does not read
-what the requirements say - no contradiction detection, no quality
-scoring, no traceability analysis. A converted document is exactly as
-good or as broken as the source it came from; a ReqIF file with proper
-identifiers is just the format that makes the next step - checking
-whether a set of requirements is internally consistent - possible in the
-first place.
-
-A traced requirement can still be wrong, and that's the harder problem
-ReqIF alone doesn't solve:
+`reqcast` moves a specification's requirements from a legacy format
+(PDF, Word, ad-hoc Markdown or text) into ReqIF, with each requirement's
+own identifier and structure preserved. It does not read what the
+requirements say - no quality scoring, no contradiction detection. A
+converted document is only as good as the source it came from; a ReqIF
+file with proper identifiers just makes the next step, checking whether
+the requirement set is internally consistent, possible in the first
+place. That next step is a harder problem than traceability alone
+solves:
 
 **→ [A Traced Requirement Can Still Be Wrong: The ASPICE Gap Assessors Keep Finding](https://wyzer.it/blog/aspice-swe1-traceability-gap)**
 
-This tool exists for the same reason [Wyzer Detective](https://wyzer.it/detective/product) does - we needed to run our own specification-review engine against real, messy, decade-old PDF specs, not clean synthetic ones:
+We built reqcast for the same reason [Wyzer Detective](https://wyzer.it/detective/product) exists: running our own specification-review engine against real, messy, decade-old PDF specs required a way to get them into ReqIF first, not clean synthetic ones already in that format.
 
 **→ [We ate our own Dog Food, using the same specification review engine we ship to you](https://wyzer.it/blog/eating-dog-food-using-specification-review-engine)**
 
-Once a spec is in ReqIF, [Wyzer Detective](https://wyzer.it/detective/product) is what actually reads it: contradictions, duplicates, and coverage gaps across the full requirement set, every finding traced back to its exact source reference.
+[Wyzer Detective](https://wyzer.it/detective/product) is the part that reads a converted spec once it's in ReqIF - duplicates and coverage gaps across the full requirement set as well as contradictions, every finding traced back to its source reference.
 
 ## Running tests
 
